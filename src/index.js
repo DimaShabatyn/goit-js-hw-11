@@ -165,6 +165,7 @@ async function onLoadMore() {
 
     insertGalleryContent(data.hits);
     galleryLightbox.refresh();
+    // onScroll();
     if (data.hits.length < 40) {
       btn.style.display = 'none';
     } else {
@@ -199,6 +200,7 @@ async function onSearcherSubmit(e) {
     Notify.success(`Hooray! We found ${data.totalHits} images.`);
     insertGalleryContent(data.hits);
     galleryLightbox.refresh();
+    // onScroll();
     if (data.hits.length < 40) {
       btn.style.display = 'none';
     } else {
@@ -284,3 +286,17 @@ const lightbox = new SimpleLightbox('.gallery a', {
   captionPosition: 'bottom',
   captionDelay: 250,
 });
+
+// //  для плавного прокручування сторінки після запиту і відтворення кожної наступної групи зображень
+// document.addEventListener('scroll', onScroll);
+
+// function onScroll() {
+//   const { height: cardHeight } = document
+//     .querySelector('.gallery')
+//     .firstElementChild.getBoundingClientRect();
+
+//   window.scrollBy({
+//     top: cardHeight * 2,
+//     behavior: 'smooth',
+//   });
+// }
