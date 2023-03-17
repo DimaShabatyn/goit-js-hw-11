@@ -5,10 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gallery</title>
     <link rel="stylesheet" href="./sass/index.scss" />
-    
   </head>
   <body>
-    
+     <header class="header">
+    <div class="container header-container">
+      <form class="search-form" id="search-form">
+        <input class="search-form-input" type="text" name="searchQuery" autocomplete="off"
+          placeholder = "Search images..." />
+        <button class="search-form-btn" type="submit">
+          Search
+        </button>
+      </form>
+    </div>
+    </div>
+  </header>
+
+  <!-- GALLERY  -->
+  <section class="photo-gallery container">
+    <!-- gallery -->
+    <div class="gallery">
+      <!-- Картки зображень -->
+    </div>
+  </section>
+    <button type="button" class="load-more">Load more</button>
     <script type="module" src="./index.js"></script>
   </body>
 </html>
