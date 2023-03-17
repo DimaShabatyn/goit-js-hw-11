@@ -252,3 +252,18 @@ a {
 .photo-gallery {
   margin-top: 5rem;
 }
+
+.sl-wrapper .sl-image div.sl-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    padding: 10px;
+    color: #e7e8ec;
+    text-shadow: 1px 1px 0 #fbf665;
+    background: #031d85;
+    font-size: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+}
