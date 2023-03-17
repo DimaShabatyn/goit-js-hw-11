@@ -157,11 +157,11 @@ btn.addEventListener('click', onLoadMore);
 async function onLoadMore() {
   const querySearch = form.searchQuery.value;
   createNextPage();
-  console.log(page);
+//   console.log(page);
   try {
     const data = await fetchPixabay(querySearch, page);
-    console.log(page);
-    console.log(data);
+    // console.log(page);
+    // console.log(data);
 
     insertGalleryContent(data.hits);
     galleryLightbox.refresh();
@@ -188,7 +188,7 @@ async function onSearcherSubmit(e) {
   try {
     const data = await fetchPixabay(querySearch, page);
 
-    console.log(data.totalHits);
+    // console.log(data.totalHits);
 
     if (data.total === 0) {
       Notify.failure(
@@ -216,8 +216,8 @@ async function fetchPixabay(query, page) {
 
   try {
       const { data } = await axios.get(url);
-      console.log(await axios.get(url));
-    console.log(data);
+    //   console.log(await axios.get(url));
+    // console.log(data);
     return data;
   } catch (err) {
     console.log(err);
