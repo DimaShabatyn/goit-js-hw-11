@@ -54,7 +54,7 @@ btn.addEventListener('click', onLoadMore);
 //   page = 1;
 
 //   if (querySearch === '') {
-//     Notify.info('Please, enter what do you want to search 😉');
+//     Notify.info('Please, enter what do you want to search');
 //     return;
 //   }
 //   fetchPixabay(querySearch, page)
@@ -72,7 +72,7 @@ btn.addEventListener('click', onLoadMore);
 //           `We already found ${
 //             data.totalHits
 //           } images for "${querySearch.toUpperCase()}.
-//       Please, enter another phrase😉`
+//       Please, enter another phrase`
 //         );
 //         return;
 //       }
@@ -201,7 +201,7 @@ async function onSearcherSubmit(e) {
   const querySearch = e.currentTarget.searchQuery.value.trim().toLowerCase();
 
   if (!querySearch) {
-    Notify.info('Please, enter what do you want to search 😉');
+    Notify.info('Please, enter what do you want to search');
     return;
   }
   btn.classList.add('is-hidden');
@@ -222,7 +222,7 @@ async function onSearcherSubmit(e) {
         `We already found ${
           data.totalHits
         } images for "${querySearch.toUpperCase()}.
-      Please, enter another phrase😉`
+      Please, enter another phrase`
       );
       return;
     }
