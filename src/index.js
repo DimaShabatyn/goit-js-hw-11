@@ -11,9 +11,9 @@ import axios from 'axios';
 const form = document.querySelector('#search-form');
 const gallery = document.querySelector('.gallery');
 const btn = document.querySelector('.load-more');
-btn.style.display = 'none';
 let page = 1;
 const per_page = 40;
+let lastSearchQuery = '';
 //додай відображення підписів до зображень з атрибута alt. Нехай підпис буде знизу
 //і з'являється через 250 мілісекунд після відкриття зображення.
 const galleryLightbox = new SimpleLightbox('.gallery a', {
@@ -26,20 +26,21 @@ form.addEventListener('submit', onSearcherSubmit);
 btn.addEventListener('click', onLoadMore);
 
 // function onLoadMore() {
-//   const querySearch = form.searchQuery.value;
+//   const querySearch = form.searchQuery.value.trim().toLowerCase();
+
 //   createNextPage();
-//   console.log(page);
+//   btn.classList.add('is-hidden');
+
 //   fetchPixabay(querySearch, page)
 //     .then(data => {
-//       console.log(page);
-//       console.log(data);
-
 //       insertGalleryContent(data.hits);
 //       galleryLightbox.refresh();
+
 //       if (data.hits.length < 40) {
-//         btn.style.display = 'none';
+//         Notify.info('These are all the images we found for your search query.');
+//         btn.classList.add('is-hidden');
 //       } else {
-//         btn.style.display = 'block';
+//         btn.classList.remove('is-hidden');
 //       }
 //     })
 //     .catch(err => console.error(err));
@@ -47,8 +48,9 @@ btn.addEventListener('click', onLoadMore);
 
 // function onSearcherSubmit(e) {
 //   e.preventDefault();
-//   const querySearch = e.currentTarget.searchQuery.value;
-//   clearGalleryContent();
+//   const querySearch = e.currentTarget.searchQuery.value.trim().toLowerCase();
+
+//   btn.classList.add('is-hidden');
 //   page = 1;
 
 //   if (querySearch === '') {
@@ -61,17 +63,32 @@ btn.addEventListener('click', onLoadMore);
 
 //       if (data.total === 0) {
 //         Notify.failure(
-//           'Sorry, there are no images matching your search query. Please try again.'
+//           `Sorry, there are no images ${querySearch.toUpperCase()} matching your search. Please try again.`
 //         );
 //         return;
 //       }
+//       if (lastSearchQuery === querySearch) {
+//         Notify.warning(
+//           `We already found ${
+//             data.totalHits
+//           } images for "${querySearch.toUpperCase()}.
+//       Please, enter another phrase😉`
+//         );
+//         return;
+//       }
+
+//       clearGalleryContent();
 //       Notify.success(`Hooray! We found ${data.totalHits} images.`);
+//       lastSearchQuery = querySearch;
+
 //       insertGalleryContent(data.hits);
 //       galleryLightbox.refresh();
+
 //       if (data.hits.length < 40) {
-//         btn.style.display = 'none';
+//         Notify.info('These are all the images we found for your search query.');
+//         btn.classList.add('is-hidden');
 //       } else {
-//         btn.style.display = 'block';
+//         btn.classList.remove('is-hidden');
 //       }
 //     })
 //     .catch(err => console.error(err));
@@ -155,9 +172,10 @@ btn.addEventListener('click', onLoadMore);
 // !----AXIOS-----!
 
 async function onLoadMore() {
-  const querySearch = form.searchQuery.value;
+  const querySearch = form.searchQuery.value.trim().toLowerCase();
   createNextPage();
-//   console.log(page);
+  btn.classList.add('is-hidden');
+  //   console.log(page);
   try {
     const data = await fetchPixabay(querySearch, page);
     // console.log(page);
@@ -167,9 +185,11 @@ async function onLoadMore() {
     galleryLightbox.refresh();
     // onScroll();
     if (data.hits.length < 40) {
-      btn.style.display = 'none';
+      Notify.info('These are all the images we found for your search query.');
+      // !btn
+      btn.classList.add('is-hidden');
     } else {
-      btn.style.display = 'block';
+      btn.classList.remove('is-hidden');
     }
   } catch (err) {
     console.error(err);
@@ -178,18 +198,17 @@ async function onLoadMore() {
 
 async function onSearcherSubmit(e) {
   e.preventDefault();
-  const querySearch = e.currentTarget.searchQuery.value;
-  clearGalleryContent();
-  page = 1;
+  const querySearch = e.currentTarget.searchQuery.value.trim().toLowerCase();
 
-  if (querySearch === '') {
+  if (!querySearch) {
     Notify.info('Please, enter what do you want to search 😉');
     return;
   }
+  btn.classList.add('is-hidden');
+  page = 1;
+
   try {
     const data = await fetchPixabay(querySearch, page);
-
-    // console.log(data.totalHits);
 
     if (data.total === 0) {
       Notify.failure(
@@ -197,14 +216,28 @@ async function onSearcherSubmit(e) {
       );
       return;
     }
+
+    if (lastSearchQuery === querySearch) {
+      Notify.warning(
+        `We already found ${
+          data.totalHits
+        } images for "${querySearch.toUpperCase()}.
+      Please, enter another phrase😉`
+      );
+      return;
+    }
+    clearGalleryContent();
     Notify.success(`Hooray! We found ${data.totalHits} images.`);
+    lastSearchQuery = querySearch;
+
     insertGalleryContent(data.hits);
     galleryLightbox.refresh();
-    // onScroll();
+
     if (data.hits.length < 40) {
-      btn.style.display = 'none';
+      Notify.info('These are all the images we found for your search query.');
+      btn.classList.add('is-hidden');
     } else {
-      btn.style.display = 'block';
+      btn.classList.remove('is-hidden');
     }
   } catch (err) {
     console.error(err);
@@ -217,7 +250,7 @@ async function fetchPixabay(query, page) {
   const url = `${URL_BASE}?key=${API_KEY}&q=${query}&image_type=photo&orientation="horizontal"&safesearch=true&page=${page}&per_page=${per_page}`;
 
   try {
-      const { data } = await axios.get(url);
+    const { data } = await axios.get(url);
     //   console.log(await axios.get(url));
     // console.log(data);
     return data;
