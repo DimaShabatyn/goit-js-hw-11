@@ -192,10 +192,10 @@ a {
 
     border: none;
     outline: none;
-    border-radius: 1.5rem;
+    border-radius: 5px;
 
     background-color: #d2daf8;
-    color: #AE1100;
+    color: #360601;
     text-shadow: 1px 1px 1px #9f9d9d;
     font-weight: 600;
     font-size: .875rem;
@@ -220,14 +220,14 @@ a {
 
     border: 0;
     outline: 0;
-    border-radius: 320px;
+    border-radius: 5px;
     cursor: pointer;
 
     color: #070707;
     text-shadow: 1px 1px 1px #fff;
     text-transform: capitalize;
     font-weight: 600;
-    box-shadow: -5px -5px 20px #fff, 5px 5px 20px #babecc;
+    // box-shadow: -5px -5px 20px #fff, 5px 5px 20px #babecc;
     transition: all 0.2s ease-in-out;
 
     &:hover {
