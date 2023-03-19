@@ -180,19 +180,26 @@ async function onLoadMore() {
     const data = await fetchPixabay(querySearch, page);
     // console.log(page);
     // console.log(data);
-
-    insertGalleryContent(data.hits);
-    galleryLightbox.refresh();
+    if (data.total === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
+    }
     // onScroll();
-    if (data.hits.length < 40) {
+    if (data.hits.length < per_page) {
       Notify.info('These are all the images we found for your search query.');
-      // !btn
       btn.classList.add('is-hidden');
     } else {
       btn.classList.remove('is-hidden');
     }
+
+    insertGalleryContent(data.hits);
+    galleryLightbox.refresh();
   } catch (err) {
-    console.error(err);
+    console.log(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
   }
 }
 
@@ -200,11 +207,23 @@ async function onSearcherSubmit(e) {
   e.preventDefault();
   const querySearch = e.currentTarget.searchQuery.value.trim().toLowerCase();
 
+  btn.classList.add('is-hidden');
+
   if (!querySearch) {
     Notify.info('Please, enter what do you want to search');
     return;
   }
-  btn.classList.add('is-hidden');
+
+  if (lastSearchQuery === querySearch && gallery.innerHTML !== '') {
+    Notify.warning(
+      `We already found images for "${querySearch.toUpperCase()}.
+    Please, enter another phrase`
+    );
+    btn.classList.remove('is-hidden');
+    return;
+  }
+
+  lastSearchQuery = querySearch;
   page = 1;
 
   try {
@@ -217,30 +236,31 @@ async function onSearcherSubmit(e) {
       return;
     }
 
-    if (lastSearchQuery === querySearch) {
-      Notify.warning(
-        `We already found ${
-          data.totalHits
-        } images for "${querySearch.toUpperCase()}.
-      Please, enter another phrase`
-      );
-      return;
-    }
+    // if (lastSearchQuery === querySearch) {
+    //   Notify.warning(
+    //     `We already found ${
+    //       data.totalHits
+    //     } images for "${querySearch.toUpperCase()}.
+    //   Please, enter another phrase`
+    //   );
+    //   return;
+    // }
     clearGalleryContent();
     Notify.success(`Hooray! We found ${data.totalHits} images.`);
-    lastSearchQuery = querySearch;
 
     insertGalleryContent(data.hits);
     galleryLightbox.refresh();
 
-    if (data.hits.length < 40) {
+    if (data.hits.length < per_page) {
       Notify.info('These are all the images we found for your search query.');
       btn.classList.add('is-hidden');
     } else {
       btn.classList.remove('is-hidden');
     }
   } catch (err) {
-    console.error(err);
+    Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
   }
 }
 
@@ -255,7 +275,9 @@ async function fetchPixabay(query, page) {
     // console.log(data);
     return data;
   } catch (err) {
-    console.log(err);
+    Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
   }
 }
 
